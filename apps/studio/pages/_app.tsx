@@ -48,7 +48,7 @@ import { StudioCommandProvider as CommandProvider } from 'components/interfaces/
 import { FeaturePreviewContextProvider } from 'components/interfaces/App/FeaturePreview/FeaturePreviewContext'
 import FeaturePreviewModal from 'components/interfaces/App/FeaturePreview/FeaturePreviewModal'
 import { MonacoThemeProvider } from 'components/interfaces/App/MonacoThemeProvider'
-import { useDebugMode } from 'components/interfaces/DebugMode/useDebugMode'
+import { DebugMode } from 'components/interfaces/DebugMode/DebugMode'
 import { GlobalErrorBoundaryState } from 'components/ui/ErrorBoundary/GlobalErrorBoundaryState'
 import { useRootQueryClient } from 'data/query-client'
 import { customFont, sourceCodePro } from 'fonts'
@@ -104,8 +104,6 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
   }
 
   useThemeSandbox()
-
-  useDebugMode()
 
   const isTestEnv = process.env.NEXT_PUBLIC_NODE_ENV === 'test'
 
@@ -166,6 +164,7 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
                       </ThemeProvider>
                     </RouteValidationWrapper>
                   </TooltipProvider>
+                  <DebugMode />
                   <Telemetry />
                   {!isTestEnv && (
                     <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
