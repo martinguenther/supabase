@@ -44,9 +44,11 @@ import MetaFaviconsPagesRouter from 'common/MetaFavicons/pages-router'
 import { RouteValidationWrapper } from 'components/interfaces/App'
 import { AppBannerContextProvider } from 'components/interfaces/App/AppBannerWrapperContext'
 import { StudioCommandMenu } from 'components/interfaces/App/CommandMenu'
+import { StudioCommandProvider as CommandProvider } from 'components/interfaces/App/CommandMenu/StudioCommandProvider'
 import { FeaturePreviewContextProvider } from 'components/interfaces/App/FeaturePreview/FeaturePreviewContext'
 import FeaturePreviewModal from 'components/interfaces/App/FeaturePreview/FeaturePreviewModal'
 import { MonacoThemeProvider } from 'components/interfaces/App/MonacoThemeProvider'
+import { useDebugMode } from 'components/interfaces/DebugMode/useDebugMode'
 import { GlobalErrorBoundaryState } from 'components/ui/ErrorBoundary/GlobalErrorBoundaryState'
 import { useRootQueryClient } from 'data/query-client'
 import { customFont, sourceCodePro } from 'fonts'
@@ -57,7 +59,6 @@ import { ProfileProvider } from 'lib/profile'
 import { Telemetry } from 'lib/telemetry'
 import { AppPropsWithLayout } from 'types'
 import { SonnerToaster, TooltipProvider } from 'ui'
-import { StudioCommandProvider as CommandProvider } from 'components/interfaces/App/CommandMenu/StudioCommandProvider'
 
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
@@ -103,6 +104,8 @@ function CustomApp({ Component, pageProps }: AppPropsWithLayout) {
   }
 
   useThemeSandbox()
+
+  useDebugMode()
 
   const isTestEnv = process.env.NEXT_PUBLIC_NODE_ENV === 'test'
 
