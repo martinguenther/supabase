@@ -366,6 +366,38 @@
               "type": "string",
               "enum": ["NA", "SA", "EU", "AF", "AS", "OC", "AN"]
             }
+          },
+          {
+            "name": "desired_instance_size",
+            "required": false,
+            "in": "query",
+            "description": "Desired instance size",
+            "schema": {
+              "example": "nano",
+              "type": "string",
+              "enum": [
+                "pico",
+                "nano",
+                "micro",
+                "small",
+                "medium",
+                "large",
+                "xlarge",
+                "2xlarge",
+                "4xlarge",
+                "8xlarge",
+                "12xlarge",
+                "16xlarge",
+                "24xlarge",
+                "24xlarge_optimized_memory",
+                "24xlarge_optimized_cpu",
+                "24xlarge_high_memory",
+                "48xlarge",
+                "48xlarge_optimized_memory",
+                "48xlarge_optimized_cpu",
+                "48xlarge_high_memory"
+              ]
+            }
           }
         ],
         "responses": {
@@ -4931,6 +4963,74 @@
         "tags": ["Organizations"],
         "x-internal": true
       }
+    },
+    "/v1/organizations/{slug}/projects": {
+      "get": {
+        "description": "Returns a paginated list of projects for the specified organization.\n\n    This endpoint uses offset-based pagination. Use the `offset` parameter to skip a number of projects and the `limit` parameter to control the number of projects returned per page.",
+        "operationId": "v1-get-all-projects-for-organization",
+        "parameters": [
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "description": "Organization slug",
+            "schema": { "pattern": "^[\\w-]+$", "type": "string" }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "description": "Number of projects to skip",
+            "schema": { "minimum": 0, "default": 0, "type": "integer" }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Number of projects to return per page",
+            "schema": { "minimum": 1, "maximum": 100, "default": 100, "type": "integer" }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Search projects by name",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "Sort order for projects",
+            "schema": {
+              "default": "name_asc",
+              "type": "string",
+              "enum": ["name_asc", "name_desc", "created_asc", "created_desc"]
+            }
+          },
+          {
+            "name": "statuses",
+            "required": false,
+            "in": "query",
+            "description": "A comma-separated list of project statuses to filter by.\n\nThe following values are supported: `ACTIVE_HEALTHY`, `INACTIVE`.",
+            "schema": { "example": "?statuses=ACTIVE_HEALTHY,INACTIVE", "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/OrganizationProjectsResponse" }
+              }
+            }
+          },
+          "500": { "description": "Failed to retrieve projects" }
+        },
+        "security": [{ "bearer": [] }],
+        "summary": "Gets all projects for the given organization",
+        "tags": ["Projects"]
+      }
     }
   },
   "info": {
@@ -5094,6 +5194,92 @@
           "message": { "type": "string", "enum": ["ok"] }
         },
         "required": ["workflow_run_id", "message"]
+      },
+      "V1ListProjectsPaginatedResponse": {
+        "type": "object",
+        "properties": {
+          "projects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "number" },
+                "cloud_provider": { "type": "string" },
+                "inserted_at": { "type": "string", "nullable": true },
+                "name": { "type": "string" },
+                "organization_id": { "type": "number" },
+                "organization_slug": { "type": "string" },
+                "ref": { "type": "string" },
+                "region": { "type": "string" },
+                "status": { "type": "string" },
+                "subscription_id": { "type": "string", "nullable": true },
+                "is_branch_enabled": { "type": "boolean" },
+                "is_physical_backups_enabled": { "type": "boolean", "nullable": true },
+                "preview_branch_refs": { "type": "array", "items": { "type": "string" } },
+                "disk_volume_size_gb": { "type": "number" },
+                "infra_compute_size": {
+                  "type": "string",
+                  "enum": [
+                    "pico",
+                    "nano",
+                    "micro",
+                    "small",
+                    "medium",
+                    "large",
+                    "xlarge",
+                    "2xlarge",
+                    "4xlarge",
+                    "8xlarge",
+                    "12xlarge",
+                    "16xlarge",
+                    "24xlarge",
+                    "24xlarge_optimized_memory",
+                    "24xlarge_optimized_cpu",
+                    "24xlarge_high_memory",
+                    "48xlarge",
+                    "48xlarge_optimized_memory",
+                    "48xlarge_optimized_cpu",
+                    "48xlarge_high_memory"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "cloud_provider",
+                "inserted_at",
+                "name",
+                "organization_id",
+                "organization_slug",
+                "ref",
+                "region",
+                "status",
+                "subscription_id",
+                "is_branch_enabled",
+                "is_physical_backups_enabled",
+                "preview_branch_refs"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "number",
+                "description": "Total number of projects. Use this to calculate the total number of pages."
+              },
+              "limit": {
+                "type": "number",
+                "description": "Maximum number of projects per page (actual number may be less)"
+              },
+              "offset": {
+                "type": "number",
+                "description": "Number of projects skipped in this response"
+              }
+            },
+            "required": ["count", "limit", "offset"]
+          }
+        },
+        "required": ["projects", "pagination"]
       },
       "V1ProjectWithDatabaseResponse": {
         "type": "object",
@@ -6355,6 +6541,11 @@
                   "connected_cluster": { "type": "integer" }
                 },
                 "required": ["healthy", "db_connected", "connected_cluster"]
+              },
+              {
+                "type": "object",
+                "properties": { "db_schema": { "type": "string" } },
+                "required": ["db_schema"]
               }
             ]
           },
@@ -6621,7 +6812,8 @@
           "track_commit_timestamp": { "type": "boolean" },
           "wal_keep_size": { "type": "string" },
           "wal_sender_timeout": { "type": "string" },
-          "work_mem": { "type": "string" }
+          "work_mem": { "type": "string" },
+          "hot_standby_feedback": { "type": "boolean" }
         }
       },
       "UpdatePostgresConfigBody": {
@@ -6650,6 +6842,7 @@
           "wal_keep_size": { "type": "string" },
           "wal_sender_timeout": { "type": "string" },
           "work_mem": { "type": "string" },
+          "hot_standby_feedback": { "type": "boolean" },
           "restart_database": { "type": "boolean" }
         },
         "additionalProperties": false
@@ -8120,6 +8313,7 @@
         "type": "object",
         "properties": {
           "query": { "type": "string", "minLength": 1 },
+          "parameters": { "type": "array", "items": {} },
           "read_only": { "type": "boolean" }
         },
         "required": ["query"]
@@ -9062,6 +9256,130 @@
           "created_by": { "type": "string", "format": "uuid" }
         },
         "required": ["project", "preview", "expires_at", "created_at", "created_by"]
+      },
+      "OrganizationProjectsResponse": {
+        "type": "object",
+        "properties": {
+          "projects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "ref": { "type": "string" },
+                "name": { "type": "string" },
+                "cloud_provider": { "type": "string" },
+                "region": { "type": "string" },
+                "is_branch": { "type": "boolean" },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "INACTIVE",
+                    "ACTIVE_HEALTHY",
+                    "ACTIVE_UNHEALTHY",
+                    "COMING_UP",
+                    "UNKNOWN",
+                    "GOING_DOWN",
+                    "INIT_FAILED",
+                    "REMOVED",
+                    "RESTORING",
+                    "UPGRADING",
+                    "PAUSING",
+                    "RESTORE_FAILED",
+                    "RESTARTING",
+                    "PAUSE_FAILED",
+                    "RESIZING"
+                  ]
+                },
+                "inserted_at": { "type": "string" },
+                "databases": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "infra_compute_size": {
+                        "type": "string",
+                        "enum": [
+                          "pico",
+                          "nano",
+                          "micro",
+                          "small",
+                          "medium",
+                          "large",
+                          "xlarge",
+                          "2xlarge",
+                          "4xlarge",
+                          "8xlarge",
+                          "12xlarge",
+                          "16xlarge",
+                          "24xlarge",
+                          "24xlarge_optimized_memory",
+                          "24xlarge_optimized_cpu",
+                          "24xlarge_high_memory",
+                          "48xlarge",
+                          "48xlarge_optimized_memory",
+                          "48xlarge_optimized_cpu",
+                          "48xlarge_high_memory"
+                        ]
+                      },
+                      "region": { "type": "string" },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "ACTIVE_HEALTHY",
+                          "ACTIVE_UNHEALTHY",
+                          "COMING_UP",
+                          "GOING_DOWN",
+                          "INIT_FAILED",
+                          "REMOVED",
+                          "RESTORING",
+                          "UNKNOWN",
+                          "INIT_READ_REPLICA",
+                          "INIT_READ_REPLICA_FAILED",
+                          "RESTARTING",
+                          "RESIZING"
+                        ]
+                      },
+                      "cloud_provider": { "type": "string" },
+                      "identifier": { "type": "string" },
+                      "type": { "type": "string", "enum": ["PRIMARY", "READ_REPLICA"] },
+                      "disk_volume_size_gb": { "type": "number" },
+                      "disk_type": { "type": "string", "enum": ["gp3", "io2"] },
+                      "disk_throughput_mbps": { "type": "number" },
+                      "disk_last_modified_at": { "type": "string" }
+                    },
+                    "required": ["region", "status", "cloud_provider", "identifier", "type"]
+                  }
+                }
+              },
+              "required": [
+                "ref",
+                "name",
+                "cloud_provider",
+                "region",
+                "is_branch",
+                "status",
+                "inserted_at",
+                "databases"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "number",
+                "description": "Total number of projects. Use this to calculate the total number of pages."
+              },
+              "limit": { "type": "number", "description": "Maximum number of projects per page" },
+              "offset": {
+                "type": "number",
+                "description": "Number of projects skipped in this response"
+              }
+            },
+            "required": ["count", "limit", "offset"]
+          }
+        },
+        "required": ["projects", "pagination"]
       }
     }
   }
