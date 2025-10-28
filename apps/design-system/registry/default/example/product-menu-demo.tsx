@@ -8,10 +8,10 @@ export default function ProductMenuDemo() {
         {
           key: 'main',
           items: [
-            { name: 'Overview', key: 'overview', url: '/overview' },
-            { name: 'Invocations', key: 'invocations', url: '/invocations' },
-            { name: 'Logs', key: 'logs', url: '/logs' },
-            { name: 'Code', key: 'code', url: '/code' },
+            { name: 'Overview', key: 'overview', url: '#' },
+            { name: 'Invocations', key: 'invocations', url: '#' },
+            { name: 'Logs', key: 'logs', url: '#' },
+            { name: 'Code', key: 'code', url: '#' },
           ],
         },
       ]}
