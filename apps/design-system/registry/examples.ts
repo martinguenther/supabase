@@ -624,6 +624,12 @@ export const examples: Registry = [
     files: ['example/popover-demo.tsx'],
   },
   {
+    name: 'product-menu-demo',
+    type: 'components:example',
+    registryDependencies: ['product-menu'],
+    files: ['example/product-menu-demo.tsx'],
+  },
+  {
     name: 'progress-demo',
     type: 'components:example',
     registryDependencies: ['progress'],

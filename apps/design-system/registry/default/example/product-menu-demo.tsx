@@ -1,21 +1,20 @@
-import Link from 'next/link'
-import { NavMenu, NavMenuItem } from 'ui'
+import { ProductMenu } from '@studio/components/ui/ProductMenu/index'
 
 export default function ProductMenuDemo() {
   return (
-    <NavMenu>
-      <NavMenuItem active={true}>
-        <Link href="#">Overview</Link>
-      </NavMenuItem>
-      <NavMenuItem active={false}>
-        <Link href="#">Invocations</Link>
-      </NavMenuItem>
-      <NavMenuItem active={false}>
-        <Link href="#">Logs</Link>
-      </NavMenuItem>
-      <NavMenuItem active={false}>
-        <Link href="#">Code</Link>
-      </NavMenuItem>
-    </NavMenu>
+    <ProductMenu
+      page="overview"
+      menu={[
+        {
+          key: 'main',
+          items: [
+            { name: 'Overview', key: 'overview', url: '/overview' },
+            { name: 'Invocations', key: 'invocations', url: '/invocations' },
+            { name: 'Logs', key: 'logs', url: '/logs' },
+            { name: 'Code', key: 'code', url: '/code' },
+          ],
+        },
+      ]}
+    />
   )
 }

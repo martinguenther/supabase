@@ -4,7 +4,7 @@ const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '/design-system'
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['ui', 'common', 'shared-data', 'icons', 'tsconfig'],
+  transpilePackages: ['ui', 'common', 'shared-data', 'icons', 'tsconfig', 'studio'],
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || '/design-system',
   images: {
     remotePatterns: [

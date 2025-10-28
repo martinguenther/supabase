@@ -21,7 +21,8 @@
       "@/*": ["./*"],
       "@ui/*": ["./../../packages/ui/src/*"], // handle ui package paths
       "contentlayer/generated": ["./.contentlayer/generated"],
-      "icons/*": ["./../../packages/icons/*"]
+      "icons/*": ["./../../packages/icons/*"],
+      "@studio/components/ui/*": ["./../../apps/studio/components/ui/*"] // Studio-only components
     },
     "plugins": [
       {
