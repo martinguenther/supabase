@@ -325,6 +325,11 @@ export const docsConfig: DocsConfig = {
           items: [],
         },
         {
+          title: 'ProductMenu',
+          href: '/docs/components/product-menu',
+          items: [],
+        },
+        {
           title: 'Progress',
           href: '/docs/components/progress',
           items: [],
